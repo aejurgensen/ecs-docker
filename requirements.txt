@@ -1,0 +1,5 @@
+us~=2.0.2
+Flask~=1.1.2
+pytest~=6.2.2
+requests~=2.24.0
+pytest-bdd~=4.0.2
