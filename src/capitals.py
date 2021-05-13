@@ -1,5 +1,5 @@
 import us
-import tfidf_matcher as tm 
+from fuzzywuzzy import process
 
 global names_and_metaphones
 global abbreviations
@@ -32,12 +32,8 @@ def get_all_names_and_metaphones():
 
 
 def get_fuzzy_match(search_string, lookup_set, ngram_len):
-    match_results = tm.matcher(original=[search_string],
-                      lookup=lookup_set,
-                      k_matches=1,
-                      ngram_length=ngram_len)
-    matched_name = match_results.lookup([0], ["Lookup 1"])[0]
-
+    match_results = process.extractOne(search_string, lookup_set)
+    matched_name = match_results[0]
     return matched_name
 
 # fuzzy-matches a search string to state/territory abbreviations,

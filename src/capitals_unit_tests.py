@@ -3,7 +3,7 @@ import capitals as caps
 
 def test_get_fuzzy_string_match():
     expected = "Alabama"
-    actual = caps.get_fuzzy_match("alama", ["AL", "Califonria", "Alaska", "Arkansas", "Alabama"], 3)
+    actual = caps.get_fuzzy_match("alama", ["Califonria", "Alaska", "Arkansas", "Alabama"], 3)
     assert expected == actual
 
 def test_match_search():
