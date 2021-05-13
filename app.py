@@ -1,4 +1,4 @@
-import capitals
+from src import capitals
 import random
 from flask import Flask, request
 
