@@ -1,5 +1,3 @@
-import time
-import os
 import capitals
 import random
 from flask import Flask, request
@@ -19,7 +17,7 @@ def get_state():
     if search is None:
         info = get_random_state()
     else:
-        info = capitals.get_state_info(capitals.match_search_string(search))
+        info = capitals.get_safe_state_info(search)
 
     return info
 
@@ -33,7 +31,7 @@ def prettified_get_state():
     if search is None:
         info = get_random_state()
     else:
-        info = capitals.get_state_info(capitals.match_search_string(search))
+        info = capitals.get_safe_state_info(search)
 
     info_str = info["name"] + "<br/>"
     info_str += "capital: " + info["capital"] + "<br/>"

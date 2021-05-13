@@ -14,6 +14,12 @@ for state in us.states.STATES_AND_TERRITORIES:
     names_and_metaphones.append(state.name)
     names_and_metaphones.append(state.name_metaphone)
 
+# add state name and abbreviations to list for obsolete entities
+for state in us.states.OBSOLETE:
+    abbreviations.append(state.abbr)
+    names_and_metaphones.append(state.name)
+    names_and_metaphones.append(state.name_metaphone)
+
 
 # returns list of abbrevations created
 def get_all_abbrevations():
@@ -37,8 +43,8 @@ def get_fuzzy_match(search_string, lookup_set, ngram_len):
 # fuzzy-matches a search string to state/territory abbreviations,
 # metaphones, and abbreviations
 def match_search_string(search_string):
-    lookup_set = abbreviations if len(search_string) < 3 else names_and_metaphones
-    ngram_len = 1 if len(search_string) < 3 else 2
+    lookup_set = abbreviations if len(search_string) < 4 else names_and_metaphones
+    ngram_len = 1 if len(search_string) < 4 else 2
 
     if len(search_string) == 2 and search_string in abbreviations:
         matched_name = search_string
@@ -46,6 +52,11 @@ def match_search_string(search_string):
         matched_name = get_fuzzy_match(search_string, lookup_set, ngram_len)
 
     return matched_name
+
+# returns a formatted text version of full name and abbreviation
+# of given state. sTate should be a state object from package us
+def get_name(state):
+    return state.name + " (" + state.abbr + ")"
 
 
 # returns a formatted text version of statehood info for given state
@@ -73,14 +84,27 @@ def get_timezones(state):
     return ", ".join(state.time_zones)
 
 
+# given a state name or abbreviation that exists in either list
+# names_and_metaphones or abbrevations, returns the state object
+# for the given name
+def get_state(state_name_or_abbrev):
+    return us.states.lookup(state_name_or_abbrev)
+
+
 # fuzzy-matches a state name or abbreviation and returns a 
 # formatted, multi-line string with the matched state's info
 def get_state_info(state_name_or_abbrev):
-    state = us.states.lookup(state_name_or_abbrev)
+    state = get_state(state_name_or_abbrev)
 
-    state_info = {"name":state.name + " (" + state.abbr + ")", 
+    state_info = {"name":get_name(state),
                   "capital":get_capital(state),
                   "statehood":get_statehood(state), 
                   "timezones":get_timezones(state)}
     
     return state_info
+
+
+def get_safe_state_info(search_string):
+    state_name = match_search_string(search_string)
+
+    return get_state_info(state_name)
