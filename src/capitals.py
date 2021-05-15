@@ -1,24 +1,22 @@
 import us
 from fuzzywuzzy import process
 
-global names_and_metaphones
+global names
 global abbreviations
 
-names_and_metaphones = []
+names = []
 abbreviations = []
 
 # add state name and state abbreviations to list of potential
 # search strings to use for fuzzy string matching
 for state in us.states.STATES_AND_TERRITORIES:
     abbreviations.append(state.abbr)
-    names_and_metaphones.append(state.name)
-    names_and_metaphones.append(state.name_metaphone)
+    names.append(state.name)
 
 # add state name and abbreviations to list for obsolete entities
 for state in us.states.OBSOLETE:
     abbreviations.append(state.abbr)
-    names_and_metaphones.append(state.name)
-    names_and_metaphones.append(state.name_metaphone)
+    names.append(state.name)
 
 
 # returns list of abbrevations created
@@ -26,9 +24,9 @@ def get_all_abbrevations():
     return abbreviations
 
 
-# returns list of names and metaphones created
-def get_all_names_and_metaphones():
-    return names_and_metaphones
+# returns list of names  created
+def get_all_names():
+    return names
 
 
 def get_fuzzy_match(search_string, lookup_set, ngram_len):
@@ -36,13 +34,12 @@ def get_fuzzy_match(search_string, lookup_set, ngram_len):
     matched_name = match_results[0]
     return matched_name
 
-# fuzzy-matches a search string to state/territory abbreviations,
-# metaphones, and abbreviations
+# fuzzy-matches a search string to state/territory names and abbreviations
 def match_search_string(search_string):
-    lookup_set = abbreviations if len(search_string) < 4 else names_and_metaphones
+    lookup_set = abbreviations if len(search_string) < 4 else names
     ngram_len = 1 if len(search_string) < 4 else 2
 
-    if len(search_string) == 2 and search_string in abbreviations:
+    if len(search_string) < 4 and search_string in abbreviations:
         matched_name = search_string
     else:
         matched_name = get_fuzzy_match(search_string, lookup_set, ngram_len)
@@ -81,7 +78,7 @@ def get_timezones(state):
 
 
 # given a state name or abbreviation that exists in either list
-# names_and_metaphones or abbrevations, returns the state object
+# names or abbrevations, returns the state object
 # for the given name
 def get_state(state_name_or_abbrev):
     return us.states.lookup(state_name_or_abbrev)
